@@ -2,7 +2,7 @@ Package: NeuroIS
 Title: Brownie R package
 Version: 0.1.0
 Authors@R: c(person(given = "Dominik", family = "Jung", role = c("aut", "cre"), email = "d.jung@kit.edu"), person(given = "Sven", family = "Michalczyk", role = c("aut"), email = "sven.michalczyk@student.kit.edu") )
-Description: The package supports your analysis of neurophysiological, or behavioral data from Brownie
+Description: The NeuroIS package supports your analysis of neurophysiological, or behavioral data from Brownie
 Depends: R (>= 3.1.0)
 License: GPL-2
 LazyData: TRUE
