@@ -26,7 +26,9 @@ createFileIndex <- function(path){
     types <- append(types, detectDataType(file))
   }
   files_types <- append(files, types)
-  return(array(files_types, dim = c(length(files),2)))
+  a_files_types <- array(files_types, dim = c(length(files),2))
+  file_index <- a_files_types[a_files_types[,2] != "unkown",] #remove unknown file types from index
+  return(file_index)
 }
 
 #' cbindFiles(files, type)
@@ -75,5 +77,12 @@ readBindFiles <- function(files, type){
 #' 
 #' @param path, prefix
 #' @return none (adds dataframes directly to environment)
-#' 
 
+importData <- function(path, prefix){
+  file_index <- createFileIndex(path = path)
+  datatypes <- unique(file_index[,2])
+  for (dtype in datatypes) {
+    files <- file_index[file_index[,2] == dtype, 1]
+    assign(paste0(prefix, "_", dtype), data.frame(readBindFiles(files, dtype)), envir = .GlobalEnv)
+  }
+}
