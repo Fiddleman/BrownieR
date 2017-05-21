@@ -2,7 +2,7 @@
 #'
 #' Detect the data type of a given file
 #'
-#' @param path, a character
+#' @param path a character
 #' @return constant web, physio, exp or none
 #'
 detectDataType <- function(file){
@@ -17,7 +17,7 @@ detectDataType <- function(file){
 #' 
 #' Creates an index of  files in a folder with corresponding data types.
 #' 
-#' @param path, a charater
+#' @param path a charater
 #' @return array with file and corresponding datatype
 createFileIndex <- function(path){
   files <-list.files(path, pattern = "*.csv|.expdata", full.names=T)
@@ -29,13 +29,53 @@ createFileIndex <- function(path){
   return(array(files_types, dim = c(length(files),2)))
 }
 
-#' cbindFiles(files)
+#' cbindFiles(files, type)
 #'
 #' Binds files in one dataframe and separate them by adding a colum Session.
 #'
-#' @param files, vector of files
+#' @param files a vector, type a character constant
 #' @return dataframe
-#'
+
+readBindFiles <- function(files, type){
+  full_data <- data.frame()
+  session_count <- 1
+  if (type == "web" || type == "physio") {
+    for (file in files) {
+      single_df <- read.csv(file = file, sep = ";", header = T, stringsAsFactors = F)
+      single_df$Session <- session_count
+      session_count <- session_count + 1
+      full_data <- rbind(full_data, single_df)
+    }
+    # Time converting to POSIXct
+    if (type == "web"){
+      full_data[t_cols_web] <- lapply(full_data[t_cols_web], function(x){as.POSIXct(full_data$x/1000, origin = "1970-01-01 00:00:00")})
+    } else {
+      full_data[t_cols_pyhsio] <- lapply(full_data[t_cols_pyhsio], function(x){as.POSIXct(full_data$x/1000, origin = "1970-01-01 00:00:00")})
+    }
+    return(full_data)
+    
+  } else if (type == "exp") {
+    for (file in files) {
+      exp_data <- readLines(file)
+      exp_data <- gsub("\"", "", exp_data)
+      single_df <- read.csv(text = exp_data, sep = ",", quote = "\"", header = T)
+      single_df$Session <- session_count
+      session_count <- session_count + 1
+      full_data <- rbind(full_data, single_df)
+    }
+    # Time converting to POSIXct
+    #full_data[t_cols_exp] <- lapply(full_data[t_cols_exp], function(x){as.POSIXct(full_data$x/1000, origin = "1970-01-01 00:00:00")})
+    return(full_data)
+  } else stop("Filetype not supported, only web, physio, exp is possible.")
+}
+
+#Manuel Testing readBindFiles
+file_index <- createFileIndex("tests/testthat/datafortestingimport")
+files <- subset(file_index[,1], file_index[,2] == "exp")
+
+exp_df <- readBindFiles(files, "exp")
+
+exp_df[t_cols_exp] <- lapply(exp_df[t_cols_exp], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
 
 
 #' importData(path, prefix)
@@ -45,5 +85,4 @@ createFileIndex <- function(path){
 #' @param path, prefix
 #' @return none (adds dataframes directly to environment)
 #' 
-
 
