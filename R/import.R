@@ -48,9 +48,9 @@ readBindFiles <- function(files, type){
     }
     # Time converting to POSIXct
     if (type == "web"){
-      full_data[t_cols_web] <- lapply(full_data[t_cols_web], function(x){as.POSIXct(full_data$x/1000, origin = "1970-01-01 00:00:00")})
+      full_data[t_cols_web] <- lapply(full_data[t_cols_web], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
     } else {
-      full_data[t_cols_pyhsio] <- lapply(full_data[t_cols_pyhsio], function(x){as.POSIXct(full_data$x/1000, origin = "1970-01-01 00:00:00")})
+      full_data[t_cols_physio] <- lapply(full_data[t_cols_physio], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
     }
     return(full_data)
     
@@ -64,19 +64,10 @@ readBindFiles <- function(files, type){
       full_data <- rbind(full_data, single_df)
     }
     # Time converting to POSIXct
-    #full_data[t_cols_exp] <- lapply(full_data[t_cols_exp], function(x){as.POSIXct(full_data$x/1000, origin = "1970-01-01 00:00:00")})
+    full_data[t_cols_exp] <- lapply(full_data[t_cols_exp], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
     return(full_data)
   } else stop("Filetype not supported, only web, physio, exp is possible.")
 }
-
-#Manuel Testing readBindFiles
-file_index <- createFileIndex("tests/testthat/datafortestingimport")
-files <- subset(file_index[,1], file_index[,2] == "exp")
-
-exp_df <- readBindFiles(files, "exp")
-
-exp_df[t_cols_exp] <- lapply(exp_df[t_cols_exp], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
-
 
 #' importData(path, prefix)
 #' 
