@@ -73,16 +73,16 @@ readBindFiles <- function(files, type){
 
 #' importData(path, prefix)
 #' 
-#' Imports brownie data (of heterogenous types) from folder and adds dataframes for each type to users environment (naming by prefix).
+#' Imports brownie data (of heterogenous types) from folder and adds list containing dataframes and type for each type to global environment (naming by prefix).
 #' 
 #' @param path, prefix
-#' @return none (adds dataframes directly to environment)
+#' @return none (adds list directly to global environment)
 
 importData <- function(path, prefix){
   file_index <- createFileIndex(path = path)
   datatypes <- unique(file_index[,2])
   for (dtype in datatypes) {
     files <- file_index[file_index[,2] == dtype, 1]
-    assign(paste0(prefix, "_", dtype), data.frame(readBindFiles(files, dtype)), envir = .GlobalEnv)
+    assign(paste0(prefix, "_", dtype), list(data = data.frame(readBindFiles(files, dtype), Datatype = dtype), envir = .GlobalEnv))
   }
 }
