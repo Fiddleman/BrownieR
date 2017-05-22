@@ -2,11 +2,11 @@
 #'
 #' Detect the data type of a given file
 #'
-#' @param path a character
+#' @param path; a character
 #' @return constant web, physio, exp or none
 #'
 detectDataType <- function(file){
-  #ToDo write for in loop for better code; Define exp, web, physio and unkown als global variabels
+  # ToDo: write for in loop for better code; Define exp, web, physio and unkown als global variabels with identfiers
   if(as.logical(length(grep("VALUENAME", readLines(file, n=1), value = F)))) return ("exp")
   else if(as.logical(length(grep("H-ScrollPosition", readLines(file, n=1), value = F)))) return ("web")
   else if(as.logical(length(grep("PlugSeqNo", readLines(file, n=1), value = F)))) return ("physio")
@@ -17,7 +17,7 @@ detectDataType <- function(file){
 #' 
 #' Creates an index of  files in a folder with corresponding data types.
 #' 
-#' @param path a charater
+#' @param path; a charater
 #' @return array with file and corresponding datatype
 createFileIndex <- function(path){
   files <-list.files(path, pattern = "*.csv|.expdata", full.names=T)
@@ -35,10 +35,13 @@ createFileIndex <- function(path){
 #'
 #' Binds files in one dataframe and separate them by adding a colum Session.
 #'
-#' @param files a vector, type a character constant
+#' @param files; a vector
+#' @param type; a character constant
 #' @return dataframe
 
 readBindFiles <- function(files, type){
+  # ToDo: Make this function more generic by give user the possibility to declare other data 
+  # types in globalVar.R (by def. sep, header, parse func., )
   full_data <- data.frame()
   session_count <- 1
   if (type == "web" || type == "physio") {
@@ -60,7 +63,7 @@ readBindFiles <- function(files, type){
     for (file in files) {
       exp_data <- readLines(file)
       exp_data <- gsub("\"", "", exp_data)
-      single_df <- read.csv(text = exp_data, sep = ",", quote = "\"", header = T)
+      single_df <- read.csv(text = exp_data, sep = ",", quote = "\"", header = T, stringsAsFactors = F)
       single_df$Session <- session_count
       session_count <- session_count + 1
       full_data <- rbind(full_data, single_df)
@@ -75,7 +78,8 @@ readBindFiles <- function(files, type){
 #' 
 #' Imports brownie data (of heterogenous types) from folder and adds list containing dataframes and type for each type to global environment (naming by prefix).
 #' 
-#' @param path, prefix
+#' @param path; a character
+#' @param prefix; a character
 #' @return none (adds list directly to global environment)
 
 importData <- function(path, prefix){
@@ -83,6 +87,6 @@ importData <- function(path, prefix){
   datatypes <- unique(file_index[,2])
   for (dtype in datatypes) {
     files <- file_index[file_index[,2] == dtype, 1]
-    assign(paste0(prefix, "_", dtype), list(data = data.frame(readBindFiles(files, dtype), Datatype = dtype), envir = .GlobalEnv))
+    assign(paste0(prefix, "_", dtype), list(Data = readBindFiles(files, dtype), Datatype = dtype, Sessions = files), envir = .GlobalEnv)
   }
 }
