@@ -79,7 +79,7 @@ readBindFiles <- function(files, type){
 #' Imports brownie data (of heterogenous types) from folder and adds list containing dataframes and type for each type to global environment (naming by prefix).
 #' 
 #' @param path; a character
-#' @param prefix; a character
+#' @param prefix; a character, naming of lists
 #' @return none (adds list directly to global environment)
 
 importData <- function(path, prefix){
