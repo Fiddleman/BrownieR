@@ -31,7 +31,7 @@ createFileIndex <- function(path){
   return(file_index)
 }
 
-#' cbindFiles(files, type)
+#' combineFiles(files, type)
 #'
 #' Binds files in one dataframe and separate them by adding a colum Session.
 #'
@@ -39,42 +39,47 @@ createFileIndex <- function(path){
 #' @param type; a character constant
 #' @return dataframe
 
-readBindFiles <- function(files, type){
-  # ToDo: Make this function more generic by give user the possibility to declare other data 
+combineFiles <- function(files, type){
   # types in globalVar.R (by def. sep, header, parse func., )
   full_data <- data.frame()
   session_count <- 1
   if (type == "web" || type == "physio") {
     for (file in files) {
       single_df <- read.csv(file = file, sep = ";", header = T, stringsAsFactors = F)
-      single_df$Session <- session_count
+      single_df$SUBJECT_ID_SUBJECT <- session_count
       session_count <- session_count + 1
       full_data <- rbind(full_data, single_df)
     }
-    # Time converting to POSIXct
-    if (type == "web"){
-      full_data[t_cols_web] <- lapply(full_data[t_cols_web], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
-    } else {
-      full_data[t_cols_physio] <- lapply(full_data[t_cols_physio], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
-    }
     return(full_data)
-    
   } else if (type == "exp") {
     for (file in files) {
       exp_data <- readLines(file)
       exp_data <- gsub("\"", "", exp_data)
       single_df <- read.csv(text = exp_data, sep = ",", quote = "\"", header = T, stringsAsFactors = F)
-      single_df$Session <- session_count
-      session_count <- session_count + 1
       full_data <- rbind(full_data, single_df)
     }
-    # Time converting to POSIXct
-    full_data[t_cols_exp] <- lapply(full_data[t_cols_exp], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
     return(full_data)
-  } else stop("Filetype not supported, only web, physio, exp is possible.")
+  } else stop("Filetype not supported, only web, physio or exp is possible.")
 }
 
-#' importData(path, prefix)
+#' convertTime(data, type)
+#' 
+#' @param data; a dataframe
+#' @param type; a character constant
+#' @return dataframe
+
+convertTime <- funtion(data, type){
+    if (type == "web"){
+      data[t_cols_web] <- lapply(data[t_cols_web], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
+    } else if (type =="physio") {
+      data[t_cols_physio] <- lapply(data[t_cols_physio], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
+    } else if (type == "exp") {
+    data[t_cols_exp] <- lapply(data[t_cols_exp], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
+    } else stop("Filetype not supported, only web, physio or exp is possible.")
+  return(data)
+}
+
+#' import(path, prefix)
 #' 
 #' Imports brownie data (of heterogenous types) from folder and adds list containing dataframes and type for each type to global environment (naming by prefix).
 #' 
@@ -82,11 +87,12 @@ readBindFiles <- function(files, type){
 #' @param prefix; a character, nameing of lists
 #' @return none (adds list directly to global environment)
 
-importData <- function(path, prefix){
+import <- function(path, prefix){
   file_index <- createFileIndex(path = path)
   datatypes <- unique(file_index[,2])
   for (dtype in datatypes) {
     files <- file_index[file_index[,2] == dtype, 1]
-    assign(paste0(prefix, "_", dtype), list(Data = readBindFiles(files, dtype), Datatype = dtype, Sessions = files), envir = .GlobalEnv)
+    data_object <- structure(Data = combineFiles(files, dtype), class = dtype, Files = files)
+    assign(paste0(prefix, "_", dtype), data_object, envir = .GlobalEnv)
   }
 }
