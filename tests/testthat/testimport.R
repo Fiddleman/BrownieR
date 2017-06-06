@@ -17,6 +17,6 @@ test_that("Test of createFileIndex, is index correctly created?", {
 })
 
 
-test_that("Test of importData",{
-  expect_equal(importData("datafortestingimport", prefix = "TEST"), NULL)
+test_that("Test of import",{
+  expect_equal(import("datafortestingimport", prefix = "TEST"), NULL)
 })
