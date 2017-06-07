@@ -20,7 +20,7 @@
 #'  \item{All Conversion-Rate is calculated by All Conversions divided by total number of impressions for all pages}
 #' }
 #'
-#' @param data; a list
+#' @param data; a list of class web
 #' @param objectives; can be either FALSE or a labeled vector of URLs
 #' @return dataframe
 #' @examples
