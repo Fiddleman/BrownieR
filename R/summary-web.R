@@ -1,6 +1,6 @@
 #' Web Summary
 #'
-#' Run this function to get a first overview of the behaviour of the propants during a web experiment.
+#' Implemented as additional method for the gerneic function summary() and all objects of class "web". Run this function to get a first overview of the behaviour of the propants during a web experiment.
 #' Create a summary of type "click frequencies" for objectives equals FALSE or "objectives" for a vector
 #' passed to the argument objectives.
 #'
@@ -20,16 +20,16 @@
 #'  \item{All Conversion-Rate is calculated by All Conversions divided by total number of impressions for all pages}
 #' }
 #'
-#' @param data; a list which contains web data in $Data
+#' @param data; a list
 #' @param objectives; can be either FALSE or a labeled vector of URLs
 #' @return dataframe
 #' @examples
 #' objectives <- c(Fonds = "https://www.visualvest.de/fonds/",
 #'                  Depot = "https://anlegen.visualvest.de/app/depot/")
-#' summary_brownie(data = data, objectives = objectives)
+#' summary(data = data, objectives = objectives)
 
-summary_web <- function(data, objectives = F){
-  data <- data$Data
+summary.web <- function(data, objectives = F, ...){
+  data <- as.data.frame(unclass(data), stringsAsFactors = F)
   if (!(objectives == F || is.character(objectives))){
     return(message("ERROR: Wrong declaration of objectives. Parameter Objectives has to be a boolean
                    FALSE or a labeled charater vector"))
@@ -44,10 +44,10 @@ summary_web <- function(data, objectives = F){
 #' Web Impression Summary
 #' 
 #' @param data, dataframe with web data
-#' @return
+#' @return dataframe
 
 summary_web_imp <- function(data){
-  data  <- subset(data, (Event == "URL-Change") | (Event == "first URL"), select = c("URL", "Time", "Session"))
+  data  <- subset(data, (Event == "URL-Change") | (Event == "first URL"), select = c("URL", "Time", "SUBJECT_ID_SUBJECT"))
   urls <- unique(data$URL) #url list which is needed for further calculations
   # Calcualte Duration per Impression in Seconds
   i <- 1
@@ -62,7 +62,7 @@ summary_web_imp <- function(data){
     # Impressions per url
     data$Impressions[data$URL == url] <- length(data_single_url$URL)
     # Sessions per url
-    data$Sessions[data$URL == url] <- length(unique(data_single_url$Session))
+    data$Sessions[data$URL == url] <- length(unique(data_single_url$SUBJECT_ID_SUBJECT))
     # Avg-duration per impression per url
     data$Duration[data$URL == url] <- round(mean(data_single_url$Duration_Imp, na.rm = T), 1)
   }
@@ -80,7 +80,7 @@ summary_web_imp <- function(data){
 #' 
 #' @param data; dataframe with web data
 #' @param objectives; labeled vector of URLs
-#' @return 
+#' @return dataframe
 
 summary_web_objectives <- function(data, objectives){
     # Select only relevant colums and pages which were defined as objective
@@ -97,6 +97,5 @@ summary_web_objectives <- function(data, objectives){
     # Rename Colums
     names(data)[3] <- "Unique_Conversions"
     names(data)[4] <- "All_Conversions"
-    objectives <- data
-    return(objectives)
+    return(data)
 }
