@@ -1,0 +1,48 @@
+#' Analyzes Brownie Logfiles and Plot Heatmaps of User Behaviour
+#'
+#' With this package it's possible to analyse logfiles which are recorded
+#' during an experiment session using theframework "brownie" by the
+#' Karlsruher Institute of Technology (KIT). After several csv files are read in
+#' with  read_brownie_data several options are available to analyse the
+#' data: To get an overview which pages are clicked during an experiment and how
+#' long propants last at each one, the function "summary" can be used. Mouse
+#' moving or clicking data can be plot on a screenshot of a webpage as heatmap.
+#' To visualize the behaviour of propants the function "as_clickstream" transform
+#' brownie data in an appropriate format suiting for the clickstream package.
+#'
+#' \tabular{ll}{ Package: \tab Brownie\cr Type: \tab Package\cr Version:
+#' \tab 0.0.0.9000\cr Date: \tab 2017-31-01\cr License: \tab GPL-3\cr Depends: \tab
+#' R (>= 3.0) \cr }
+#'
+#' @name Brownie-package
+#' @docType package
+#' @author Sven Michalczyk \email{sven.michalczyk@icloud.com}
+#' @keywords web analytics, logfiles, kd2lab, clickstream, brownie, heatmap
+#'
+#' @examples
+#'# Read in your logfiles
+#'data <- read_brownie_data("data", removeQuery = T, removeFragment = T)
+#'
+#'# To get an overview of your data with summary_brownie()
+#'summary <- summary_brownie(data = data, objectives = F)
+#'
+#'# Once you see the complete list of visited pages, select objectives to create a report showing conversion rates
+#'objectives  <- c(Fonds = "https://www.visualvest.de/fonds/",
+#'                 Depot = "https://anlegen.visualvest.de/app/depot/")
+#'summary_brownie(data = data, objectives = objectives)
+#'
+#'# Take Screenshots of your pages
+#'# It's cruical that the right width is taken. The width must be the width of the browser viewport during the experiment!
+#'take_screenshot(urls = summary$URL, width = 1200)
+#'
+#'# Plot data
+#'heatmap_for_homepage <- plot_brownie(data,  url="https://www.visualvest.de/", type = "motion", session = "all")
+#'
+#'# Convert to clickstream
+#'as_clickstream(data, objectives, "last")
+#'
+#' @import ggplot2
+#' @import png
+#' @import grid
+#' @import webshot
+NULL
