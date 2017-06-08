@@ -15,7 +15,7 @@
 #' @param color a color, Color of data points. Use a color which is most different than the website. See the R's color specifications for more details and possible values.
 #' @examples
 #' plot_brownie(data, url="http://youwebsitetoplot.com/", type = "motion", subject = c(1, 2), alpha = 0.1, size = 0.5, color ="purple")
-plot_web <-  function(data,  url, type = "motion", subject = c(1, 2), alpha = 0.1, size = 0.5, color ="purple", ...){
+plot.web <-  function(data,  url, type = "motion", subject = c(1, 2), alpha = 0.1, size = 0.5, color ="purple", ...){
   screenshot_path <- url_to_filename(url)
   screenshot_list <- list.files(path = "screenshots", pattern = "*.png", full.names = T)
   if (!any(screenshot_list == screenshot_path)) {
