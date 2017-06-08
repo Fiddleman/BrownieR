@@ -1,14 +1,16 @@
 #' Analyzes Brownie Logfiles and Plot Heatmaps of User Behaviour
 #'
 #' With this package it's possible to analyse logfiles which are recorded
-#' during an experiment session using theframework "brownie" by the
-#' Karlsruher Institute of Technology (KIT). After several csv files are read in
-#' with  read_brownie_data several options are available to analyse the
+#' during an experiment session using theframework "Brownie"[1] by the
+#' Karlsruher Institute of Technology (KIT). After your csv files are read in
+#' with read_brownie_data() several options are available to analyse the
 #' data: To get an overview which pages are clicked during an experiment and how
 #' long propants last at each one, the function "summary" can be used. Mouse
 #' moving or clicking data can be plot on a screenshot of a webpage as heatmap.
 #' To visualize the behaviour of propants the function "as_clickstream" transform
 #' brownie data in an appropriate format suiting for the clickstream package.
+#' 
+#' [1] http://im.iism.kit.edu/1093_1100.php
 #'
 #' \tabular{ll}{ Package: \tab Brownie\cr Type: \tab Package\cr Version:
 #' \tab 0.0.0.9000\cr Date: \tab 2017-31-01\cr License: \tab GPL-3\cr Depends: \tab
