@@ -14,3 +14,7 @@ test_that("Test trans_for_webplot", {
   import("datafortestingimport", prefix = "TEST")
   expect_equal(names(trans_for_webplot(TEST_web, url = "http://im.iism.kit.edu/home.php", type = "motion", subject = 1)), c("X", "Y", "subject"))
 })
+
+test_that("Test plot function", {
+  import("datafordatafortestingplot", prefix ="PLOT")
+})
