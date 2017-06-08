@@ -16,8 +16,9 @@
 #' \tab 0.0.0.9000\cr Date: \tab 2017-31-01\cr License: \tab GPL-3\cr Depends: \tab
 #' R (>= 3.0) \cr }
 #'
-#' @name Brownie-package
+#' @name NeuroIS-package
 #' @docType package
+#' @author Dominik Jung \email{d.jung@kit.edu}
 #' @author Sven Michalczyk \email{sven.michalczyk@icloud.com}
 #' @keywords web analytics, logfiles, kd2lab, clickstream, brownie, heatmap
 #'

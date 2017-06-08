@@ -22,8 +22,7 @@ take_screenshot <- function(urls = "http://www.google.de", width = 1000) {
                    needed for this function to work. Please install both.
                    For further information visit webshot pkg help page.
                    To complete the installation of webshot, run the following
-                   command: webshot::install_phantomjs() to install the module
-                   webshot is taking screenshots with."))
+                   command: webshot::install_phantomjs() for screenshot functionality."))
   }
   filenames <- sapply(urls, function(x) url_to_filename(x))
   # screenshot making
