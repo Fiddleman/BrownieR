@@ -15,7 +15,7 @@
 #' @param color a color, Color of data points. Use a color which is most different than the website. See the R's color specifications for more details and possible values.
 #' @examples
 #' plot_brownie(data, url="http://youwebsitetoplot.com/", type = "motion", subject = c(1, 2), alpha = 0.1, size = 0.5, color ="purple")
-plot_brownie <-  function(data,  url, type = "motion", subject = c(1, 2), alpha = 0.1, size = 0.5, color ="purple"){
+plot_web <-  function(data,  url, type = "motion", subject = c(1, 2), alpha = 0.1, size = 0.5, color ="purple", ...){
   screenshot_path <- url_to_filename(url)
   screenshot_list <- list.files(path = "screenshots", pattern = "*.png", full.names = T)
   if (!any(screenshot_list == screenshot_path)) {
@@ -37,24 +37,24 @@ plot_brownie <-  function(data,  url, type = "motion", subject = c(1, 2), alpha 
   # Add min and max points to data to calibrate plot
   data_points <- rbind(data_points, c(screenshot_width, screenshot_height, subject[1]), c(0, 0, subject[1]))
   # Start plotting -----------
-  heatmap <- ggplot(data_points, aes(X,Y)) +
+  heatmap <- ggplot2::ggplot(data_points, ggplot2::aes(X,Y)) +
     # xmax and ymin values are necessary for calibration again
-    annotation_custom(raster_img, xmin=0, xmax= screenshot_width, ymin=-screenshot_height, ymax=0) +
-    geom_point(alpha = alpha, size = size, color = color) +
-    coord_fixed(ratio = 1) + #fix coord system
-    scale_y_reverse() + #reverse data of y axis to start with zero at the top
-    theme(legend.position="none",
-          axis.text = element_blank(),
-          axis.title = element_blank(),
-          axis.ticks = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.background = element_blank())
+    ggplot2::annotation_custom(raster_img, xmin=0, xmax= screenshot_width, ymin=-screenshot_height, ymax=0) +
+    ggplot2::geom_point(alpha = alpha, size = size, color = color) +
+    ggplot2::coord_fixed(ratio = 1) + #fix coord system
+    ggplot2::scale_y_reverse() + #reverse data of y axis to start with zero at the top
+    ggplot2::theme(legend.position="none",
+          axis.text = ggplot2::element_blank(),
+          axis.title = ggplot2::element_blank(),
+          axis.ticks = ggplot2::element_blank(),
+          panel.grid.major = ggplot2::element_blank(),
+          panel.background = ggplot2::element_blank())
   # Save plot ----------------------
   filename_heatmap <- gsub("screenshots", "plots", screenshot_path)
   # Determine size of plot in inches:
   plot_width <- 0.003813559*screenshot_width #factor comes from try and error
   plot_height <- screenshot_height/screenshot_width*plot_width
-  ggsave(plot = heatmap, filename = filename_heatmap, width = plot_width, height = plot_height)
+  ggplot2::ggsave(plot = heatmap, filename = filename_heatmap, width = plot_width, height = plot_height)
   return(print(heatmap))
   }
 
