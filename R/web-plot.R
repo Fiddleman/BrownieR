@@ -13,8 +13,9 @@
 #' @param size a numeric, For type motion size=0.5 is recommended and for type click size=2.5 is a good setting to start.
 #' It depends very much on the amount of data points.
 #' @param color a color, Color of data points. Use a color which is most different than the website. See the R's color specifications for more details and possible values.
+#' @return plot as png at folder "yourworkingdirectory/plots/plot.png"
 #' @examples
-#' plot_brownie(data, url="http://youwebsitetoplot.com/", type = "motion", subject = c(1, 2), alpha = 0.1, size = 0.5, color ="purple")
+#' plot(data, url="http://youwebsitetoplot.com/", type = "motion", subject = c(1, 2), alpha = 0.1, size = 0.5, color ="purple")
 plot.web <-  function(data,  url, type = "motion", subject = c(1, 2), alpha = 0.1, size = 0.5, color ="purple", ...){
   screenshot_path <- url_to_filename(url)
   screenshot_list <- list.files(path = "screenshots", pattern = "*.png", full.names = T)
@@ -50,17 +51,14 @@ plot.web <-  function(data,  url, type = "motion", subject = c(1, 2), alpha = 0.
           panel.grid.major = ggplot2::element_blank(),
           panel.background = ggplot2::element_blank())
   # Save plot ----------------------
-  filename_heatmap <- gsub("screenshots", "plots", screenshot_path)
+  filename_heatmap <- gsub("screenshots/", "", screenshot_path)
   # Determine size of plot in inches:
   plot_width <- 0.003813559*screenshot_width #factor comes from try and error
   plot_height <- screenshot_height/screenshot_width*plot_width
-  ggplot2::ggsave(plot = heatmap, filename = filename_heatmap, width = plot_width, height = plot_height)
+  if (!dir.exists("plots")) dir.create("plots")
+  ggplot2::ggsave(plot = heatmap, filename = filename_heatmap, path="plots", width = plot_width, height = plot_height)
   return(print(heatmap))
   }
-
-
-
-
 
 #' trans_for_webplot, helper function
 #'
@@ -99,4 +97,3 @@ trans_for_webplot <- function(data, url, type = "motion", subject = c(1, 2)) {
   data_points <- data.frame(X = x, Y = y, subject = data_pos$SUBJECT_ID_SUBJECT)
   return(data_points)
 }
-
