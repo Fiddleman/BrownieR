@@ -18,3 +18,10 @@ test_that("Test trans_for_webplot", {
 test_that("Test plot function", {
   import("datafordatafortestingplot", prefix ="PLOT")
 })
+
+## Playground and fragments for write test classes:
+
+# take_screenshot(sum_PL[1,1])
+# plot(PL_web, type="motion", sum_PL[1,1], subject = 1, alpha = 1.0, color = "purple")
+# take_screenshot(sum_PL[2,1])
+# plot(PL_web, type="motion", sum_PL[2,1], subject = 1, alpha = 1.0, color = "purple")

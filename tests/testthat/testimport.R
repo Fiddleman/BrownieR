@@ -19,6 +19,4 @@ test_that("Test of indexFiles, is index correctly created?", {
 
 test_that("Test of import",{
   expect_equal(import("datafortestingimport", prefix = "TEST"), NULL)
-  
-  plot.web(TEST_web, type="motion", url = "http://im.iism.kit.edu/home.php",subject = 1,alpha = 1.0,color = "purple")
 })
