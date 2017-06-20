@@ -34,7 +34,7 @@ plot.web <-  function(data,  url, type = "motion", subject = c(1, 2), alpha = 0.
   screenshot_height <- dim(img)[1]
   raster_img <- grid::rasterGrob(img, interpolate=T)
   # Read in data
-  data_points <- trans_for_webplot(data = data, type = type, url = url, subject = subject)
+  data_points <- transform.web(data = data, type = type, url = url, subject = subject)
   # Add min and max points to data to calibrate plot
   data_points <- rbind(data_points, c(screenshot_width, screenshot_height, subject[1]), c(0, 0, subject[1]))
   # Start plotting -----------
@@ -60,7 +60,7 @@ plot.web <-  function(data,  url, type = "motion", subject = c(1, 2), alpha = 0.
   return(print(heatmap))
   }
 
-#' trans_for_webplot, helper function
+#' transform.web, helper function
 #'
 #' Function gets called by \code{link{plot_brownie}} to calculate data points to plot on screenshot.
 #'
@@ -82,8 +82,7 @@ plot.web <-  function(data,  url, type = "motion", subject = c(1, 2), alpha = 0.
 #' @param subject a integer vector including the subjects which should be considered for calculation
 #' @return dataframe
 
-trans_for_webplot <- function(data, url, type = "motion", subject = c(1, 2)) {
-  if (class(data) != "web") stop("Function requires web data")
+transform.web <- function(data, url, type = "motion", subject = c(1, 2)) {
   data <- as.data.frame(unclass(data), stringsAsFactors = F)
   if (type == "click") {
     type_of_plot <- "MouseButtonPressed"
