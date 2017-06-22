@@ -51,8 +51,14 @@ summary_web_imp <- function(data){
   urls <- unique(data$URL) #url list which is needed for further calculations
   # Calcualte Duration per Impression in Seconds
   i <- 1
-  for (i in 1:nrow(data)){
-    data$Duration_Imp[i] <- (data$Time[i]-data$Time[i+1])*(-1)
+  for (i in 1:nrow(data)){ #if else construction for case if the duration cannot be calculate, for e.g. last side user visisted
+    if (i == nrow(data)) {
+      data$Duration_Imp[i] <- NaN
+    } else if (data$SUBJECT_ID_SUBJECT[i] == data$SUBJECT_ID_SUBJECT[i+1]) {
+      data$Duration_Imp[i] <- data$Time[i+1] - data$Time[i]
+    } else {
+      data$Duration_Imp[i] <- NaN
+    }
     i <- i + 1
   }
   # Calculate page data
