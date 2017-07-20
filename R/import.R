@@ -91,10 +91,22 @@ import <- function(path, prefix){
   file_index <- indexFiles(path = path)
   datatypes <- unique(file_index[,2])
   for (dtype in datatypes) {
-    files <- file_index[file_index[,2] == dtype, 1]
-    data <- combineFiles(files, dtype)
-    data <- convertTime(data, dtype)
-    data_object <- structure(data, class = dtype, files = files)
-    assign(paste0(prefix, "_", dtype), data_object, envir = .GlobalEnv)
+    if (dtype == "web" || dtype == "exp"){
+      files <- file_index[file_index[,2] == dtype, 1]
+      data <- combineFiles(files, dtype)
+      data <- convertTime(data, dtype)
+      data_object <- structure(data, class = dtype, files = files)
+      assign(paste0(prefix, "_", dtype), data_object, envir = .GlobalEnv)
+    } else {
+      #move all physio files to folder ./physio/data
+      todir <- dirname("./data/physio/data")
+      if (!isTRUE(file.info(todir)$isdir)) dir.create(todir, recursive=TRUE)
+      files <- file_index[file_index[,2] == dtype, 1]
+      for (file in files) {
+        tofilename = paste0(todir, "")
+        rename(from = file, to = tofilenmae)
+      }
+    }
+
   }
 }
