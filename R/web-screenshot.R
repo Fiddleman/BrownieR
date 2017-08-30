@@ -25,7 +25,11 @@ take_screenshot <- function(urls = "http://www.google.de", width = 1000) {
                    command: webshot::install_phantomjs() for screenshot functionality."))
   }
   filenames <- sapply(urls, function(x) url_to_filename(x))
-  # screenshot making
+  # testing if urls are working
+  for (url in urls){
+    if (!RCurl::url.exists(url)) stop("ERROR: One of your urls is not responding. Check your internet connection!")
+  }
+  # screenshot making  
   webshot::webshot(url = urls, file = filenames, vwidth = width)
   return(filenames)
   }

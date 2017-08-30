@@ -12,7 +12,7 @@ RoxygenNote: 5.0.1
 Imports:
     ggplot2 (>= 2.2.1),
     png (>= 0.1-7),
-    grid (>= 3.3.1,
+    grid (>= 3.3.1),
     waveslim, 
     rJava, 
     utils, 
@@ -20,4 +20,5 @@ Imports:
     signal
 Suggests:
     webshot (>= 0.4.0),
-    testthat
+    testthat,
+    RCurl

@@ -48,4 +48,6 @@
 #' @import png
 #' @import grid
 #' @import webshot
+#' @import rJava
+#' @import RCurl
 NULL
