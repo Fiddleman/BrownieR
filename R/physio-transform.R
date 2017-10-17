@@ -32,70 +32,30 @@ transformInputs <- function(data, inputorder){
   }
 }
 
-#' createMarkerFile.exp(data, subject)
+#' createMarkerFile(data, subject)
 #' 
 #' Creates a "Marker File" for a specified subject. It's needed to calculate for e.g. heart reates for each experimental screen.
 #' For unisens, this file needs to be in *wd*/data/physio/data .
 #' 
-#' @param data a list of class exp
+#' @param data a list of class exp or web
 #' @param subject, a integer identifies subject for which marker file will be created
 #' @param minSampleTimeSubject, a integer - minimum sample time of subject is needed to caluclate durations of screens and sync sample to exp data
 #' @return a dataframe 
 
-createMarkerFile.exp <- function(data, subject, minSampleTimeSubject){
-  data <- as.data.frame(unclass(data), stringsAsFactors = F)
-  data <- subset(data,SUBJECT_ID_SUBJECT == subject, select = c(CLIENT_TIME, SCREEN_NAME)) #filter by specified subject, keep only ClienTime, Screen
+createMarkerFile <- function(data, subject, minSampleTimeSubject){
+  if (class(data) == "exp"){
+    data <- as.data.frame(unclass(data), stringsAsFactors = F)
+    data <- subset(data,SUBJECT_ID_SUBJECT == subject, select = c(CLIENT_TIME, SCREEN_NAME)) #filter by specified subject, keep only ClienTime, Screen    
+  } else if (class(data) == "web"){
+    data <- as.data.frame(unclass(data), stringsAsFactors = F)
+    data  <- subset(data, (Event == "URL-Change") | (Event == "first URL"), select = c("Time", "URL", "SUBJECT_ID_SUBJECT"))
+    data <-  subset(data, SUBJECT_ID_SUBJECT == subject, select = c("Time", "URL"))
+  } else return(stop("Data of type web or exp required!"))
+  
   data[, 3] <- 0
   data <- data[,c(1,3,2)] #reorder colums to get right format
-  data$CLIENT_TIME <- as.numeric(data$CLIENT_TIME) - minSampleTimeSubject #calculate duration
+  data[ ,1] <- as.numeric(data[ ,1]) - minSampleTimeSubject #calculate duration
   names(data) <- c("DURATION", "0", "EVENT")
   data <- data[order(data$DURATION),] #order by duration
   return(data)
-}
-
-
-#Function is not needed at the moment: 20.7.-----------
-#' removeEmptyColums()
-#' 
-#' Removes every colum containing zeros, as it appears for inputs with no connected sensor in a experiment.
-#' 
-#' @param data a physio dataframe 
-#' @return dataframe
-
-removeEmptyColums <- function(data) {
-  colums <- 1:length(data)
-  del_col <- NULL
-  for (colum in colums) {
-    if (all(data[colum] == 0)) del_col <- c(del_col, colum)
-  }
-  if (!is.null(del_col)) data <- data[,-del_col]
-  return(data)
-}
-
-
-
-#Function is not needed at the moment: 20.7.-----------
-#' transform.physio()
-#' 
-#' This function transform a list of class physio, doing the following: remove empty input colums; 
-#' calculate time since tracking has started; normalize the sensor data using z-scores.
-#' Output is again a list, where each subject is a  list item.
-#' 
-#' @param data a list of class physio
-#' @return list
-
-transform.physio <- function(data){
-  data <- as.data.frame(unclass(data), stringsAsFactors = F)
-  subjects <- unique(data$SUBJECT_ID_SUBJECT)
-  data_list <- list()
-  for (subject in subjects){
-    data <- data[data$SUBJECT_ID_SUBJECT == subject,] #split df for subjects
-    data <- removeEmptyColums(data)
-    data <- normTime(data)
-    data$SUBJECT_ID_SUBJECT <- NULL
-    data <- list(data)
-    names(data) <- paste0("SUBJECT_ID_SUBJECT", subject)
-    data_list <- c(data_list, data)
-  }
-  return(data_list)
 }
