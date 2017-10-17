@@ -1,3 +1,46 @@
+#' import(path, prefix)
+#' 
+#' Imports brownie data (of heterogenous types) from folder and adds list containing dataframes and type to global environment (nameing by prefix).
+#' It only imports data of class web and exp directly in R, due to the fact, that pyhsio-data is too big, it moves it in 
+#' a subdirectory, in *path*/physio/
+#' 
+#' @param path; a character
+#' @param prefix; a character, nameing of lists
+#' @return none (adds list directly to global environment)
+
+import <- function(path, prefix){
+  file_index <- indexFiles(path = path)
+  datatypes <- unique(file_index[,2])
+  for (dtype in datatypes) {
+    if (dtype == "web" || dtype == "exp"){
+      files <- file_index[file_index[,2] == dtype, 1]
+      data <- combineFiles(files, dtype)
+      data <- convertTime(data, dtype)
+      data_object <- structure(data, class = dtype, files = files)
+      assign(paste0(prefix, "_", dtype), data_object, envir = .GlobalEnv)
+    } else {
+      #move all physio files to folder ./physio/data
+      topath <- paste0(path,file.path("/physio/"))
+      files <- file_index[file_index[,2] == dtype, 1]
+      if (!dir.exists(topath)) dir.create(topath, recursive=TRUE)
+      for (file in files) {
+        tofilename = paste0(topath, basename(file))
+        file.rename(from = file, to = tofilename)      
+      
+      
+      
+      # todir <- file.path("data/physio/")
+      # dirtocreate <- file.path("data/physio/data")
+      # if (!dir.exists(dirtocreate)) dir.create(dirtocreate, recursive=TRUE)
+      # files <- file_index[file_index[,2] == dtype, 1]
+      # for (file in files) {
+      #   tofilename = paste0(todir, file)
+      #   file.rename(from = file, to = tofilename)
+      }
+    }
+  }
+}
+
 #' detectDataType(path)
 #'
 #' Detect the data type of a given file
@@ -77,38 +120,4 @@ convertTime <- function(data, type){
     data[t_cols_exp] <- lapply(data[t_cols_exp], function(x){as.POSIXct(x/1000, origin = "1970-01-01 00:00:00")})
     } else stop("Filetype not supported, only web, physio or exp is possible.")
   return(data)
-}
-
-#' import(path, prefix)
-#' 
-#' Imports brownie data (of heterogenous types) from folder and adds list containing dataframes and type to global environment (nameing by prefix).
-#' It only imports data of class web and exp directly in R, due to the fact, that pyhsio - Data is to big, it moves it in 
-#' a subdirectory, in *wd*/data/physio/data.
-#' 
-#' @param path; a character
-#' @param prefix; a character, nameing of lists
-#' @return none (adds list directly to global environment)
-
-import <- function(path, prefix){
-  file_index <- indexFiles(path = path)
-  datatypes <- unique(file_index[,2])
-  for (dtype in datatypes) {
-    if (dtype == "web" || dtype == "exp"){
-      files <- file_index[file_index[,2] == dtype, 1]
-      data <- combineFiles(files, dtype)
-      data <- convertTime(data, dtype)
-      data_object <- structure(data, class = dtype, files = files)
-      assign(paste0(prefix, "_", dtype), data_object, envir = .GlobalEnv)
-    } else {
-      #move all physio files to folder ./physio/data
-      todir <- file.path("data/physio/")
-      dirtocreate <- file.path("data/physio/data")
-      if (!dir.exists(dirtocreate)) dir.create(dirtocreate, recursive=TRUE)
-      files <- file_index[file_index[,2] == dtype, 1]
-      for (file in files) {
-        tofilename = paste0(todir, file)
-        file.rename(from = file, to = tofilename)
-      }
-    }
-  }
 }
