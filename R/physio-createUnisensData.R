@@ -9,6 +9,7 @@
 #' @param nameTrimmedUnisensDataFolder a char name of a subdirectory in destinationDirectory where all the final unisens files will be placed at.
 #' @param pathMarkerFile a char, path to the marker file as csv. The function createMarkerFile will create a dataframe in the proper format.
 #' @return prints log files of processing and finally the path to all avaliable unisense data for each subject
+#' @export
 createUnisensData <- function(data = physio174,
                               subjectname = "174",
                               destinationDirectory = "tests/testthat/datafortestingphysio/",

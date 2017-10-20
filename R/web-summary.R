@@ -23,6 +23,7 @@
 #' @param data; a list of class web
 #' @param objectives; can be either FALSE or a labeled vector of URLs
 #' @return dataframe
+#' @export
 #' @examples
 #' objectives <- c(Fonds = "https://www.visualvest.de/fonds/",
 #'                  Depot = "https://anlegen.visualvest.de/app/depot/")

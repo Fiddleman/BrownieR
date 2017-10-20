@@ -6,7 +6,6 @@
 #' @param unisensDestDataFolder the unisens data folder where all unisens data are stored. Normally "./01_unisens_data".
 #' @param subject subfolder name of the unisens data.
 #' @param markerfile full path of markerfile
-#' @export
 #' @import rJava
 #' @examples
 #' \dontrun{

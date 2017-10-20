@@ -8,7 +8,6 @@
 #' @param subject the subfolder name and the file name of the cut data.
 #' @param destdir the folder where the cut data will be stored.
 #' @param sourcedir the folder where the raw data is stored. If not given, assume sourcedir is equal to destdir.
-#' @export
 #' @examples
 #' \dontrun{
 #' ## If data frame is given:

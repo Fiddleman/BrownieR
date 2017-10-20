@@ -5,7 +5,6 @@
 #' @param pathCutData the folder where cut data is stored
 #' @param pathUnisensData the unisens data folder where unisens data should be stored. Normally "./01_unisens_data".
 #' @param subject subfolder name of the unisens data
-#' @export
 #' @examples
 #' \dontrun{
 #' cut_data <- "./00_rwa_data_cut"

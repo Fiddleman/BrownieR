@@ -14,6 +14,7 @@
 #' @param objectives can be either FALSE or a labeled vector of URLs
 #' @param attribution a character, either "first" or "last"
 #' @return list of class "clickstreams"
+#' @export
 #' @examples
 #' import("datafortestingplot/", "amz")
 #' objective  <- c("Harry Potter Special angesehen!" = summary(amz_web)[41,1])
