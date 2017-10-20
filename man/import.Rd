@@ -15,6 +15,8 @@ import(path, prefix)
 none (adds list directly to global environment)
 }
 \description{
-Imports brownie data (of heterogenous types) from folder and adds list containing dataframes and type for each type to global environment (naming by prefix).
+Imports brownie data (of heterogenous types) from folder and adds list containing dataframes and type to global environment (nameing by prefix).
+It only imports data of class web and exp directly in R, due to the fact, that pyhsio-data is too big, it moves it in 
+a subdirectory, in *path*/physio/
 }
 
