@@ -7,6 +7,7 @@
 #' @param path; a character
 #' @param prefix; a character, nameing of lists
 #' @return none (adds list directly to global environment)
+#' @export
 
 import <- function(path, prefix){
   file_index <- indexFiles(path = path)
@@ -26,16 +27,6 @@ import <- function(path, prefix){
       for (file in files) {
         tofilename = paste0(topath, basename(file))
         file.rename(from = file, to = tofilename)      
-      
-      
-      
-      # todir <- file.path("data/physio/")
-      # dirtocreate <- file.path("data/physio/data")
-      # if (!dir.exists(dirtocreate)) dir.create(dirtocreate, recursive=TRUE)
-      # files <- file_index[file_index[,2] == dtype, 1]
-      # for (file in files) {
-      #   tofilename = paste0(todir, file)
-      #   file.rename(from = file, to = tofilename)
       }
     }
   }
