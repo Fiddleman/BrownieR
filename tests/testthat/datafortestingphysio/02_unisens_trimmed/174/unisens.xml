@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<unisens comment="Trimmed Unisens File" measurementId="174" timestampStart="2017-04-24T09:39:38.653" version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.unisens.org/unisens2.0 http://www.unisens.org/unisens2.0/unisens.xsd" xmlns="http://www.unisens.org/unisens2.0">
+<signalEntry adcResolution="16" comment="trimmed ecg data" contentClass="ECG" dataType="double" id="ecg.bin" lsbValue="1" sampleRate="1000" unit="V">
+<binFileFormat endianess="LITTLE"/>
+<channel name="Lead I"/>
+</signalEntry>
+<signalEntry adcResolution="16" comment="trimmed eda data" contentClass="EDA" dataType="double" id="eda.bin" lsbValue="1" sampleRate="1000" unit="μS">
+<binFileFormat endianess="LITTLE"/>
+<channel name="EDA"/>
+</signalEntry>
+<signalEntry adcResolution="16" comment="trimmed pleth data" contentClass="PLETH" dataType="double" id="pleth.bin" lsbValue="1" sampleRate="1000" unit="XX">
+<binFileFormat endianess="LITTLE"/>
+<channel name="PLETH"/>
+</signalEntry>
+<eventEntry comment="trimmed event entry data" commentLength="10" contentClass="MARKERS" id="marker.csv" sampleRate="1000" typeLength="1">
+<csvFileFormat decimalSeparator="." separator=";"/>
+</eventEntry>
+<eventEntry comment="trimmed oc event entry data" commentLength="10" contentClass="MARKERS" id="marker_oc.csv" sampleRate="1000" typeLength="1">
+<csvFileFormat decimalSeparator="." separator=";"/>
+</eventEntry>
+<signalEntry adcResolution="16" comment="filtered ecg data" contentClass="ECG" dataType="double" id="ecg_tme.bin" lsbValue="1" sampleRate="1000" unit="V">
+<binFileFormat endianess="LITTLE"/>
+<channel name="Lead I"/>
+</signalEntry>
+</unisens>
