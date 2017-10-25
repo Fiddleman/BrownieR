@@ -42,21 +42,23 @@ cutData <- function(rawData, subject, destdir, sourcedir = NULL){
         if(!dir.exists(destfolder)){dir.create(destfolder, recursive = TRUE)}
 
         if(file.exists(file.path(destfolder, destfile))){
-                stop(cat(subject, " already processed (raw data has been already cut)\n"))
+                message(cat(subject, " already processed (raw data has been already cut)\n"))
+        } else {
+          # only the first row, as all rows have the same two values
+          timestamp_receive <- rawData[1, "ReceiveTime"]
+          timestamp_sampling <- rawData[1, "SampleTime"]
+          
+          timestamp_diff <- as.numeric(timestamp_receive)-as.numeric(timestamp_sampling)-1000
+          timestamp_new <- as.numeric(timestamp_sampling) + as.integer(timestamp_diff/2)
+          timestamp <- as.numeric(timestamp_sampling)
+          
+          inputDataCut <- rawData[, c("Input1",  "Input3", "Input2"), drop=FALSE]
+          
+          cutDataResult <- rbind(c(timestamp, timestamp_new, timestamp), inputDataCut)
+          
+          writeToCSV(destfolder, destfile, cutDataResult)
         }
 
-        # only the first row, as all rows have the same two values
-        timestamp_receive <- rawData[1, "ReceiveTime"]
-        timestamp_sampling <- rawData[1, "SampleTime"]
 
-        timestamp_diff <- as.numeric(timestamp_receive)-as.numeric(timestamp_sampling)-1000
-        timestamp_new <- as.numeric(timestamp_sampling) + as.integer(timestamp_diff/2)
-        timestamp <- as.numeric(timestamp_sampling)
-
-        inputDataCut <- rawData[, c("Input1",  "Input3", "Input2"), drop=FALSE]
-
-        cutDataResult <- rbind(c(timestamp, timestamp_new, timestamp), inputDataCut)
-
-        writeToCSV(destfolder, destfile, cutDataResult)
 
 }

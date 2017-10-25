@@ -3,7 +3,7 @@
 #' Function compresses a physio dataframe by extracting only the EDA data ($Input2) and calculating the average eda values per second.
 #' A start_time needs to be speficied to sync the data to a marker object. 
 #'
-#' @param data; a dataframe of class physio for a specific subject
+#' @param data; a physio dataframe for a specific subject
 #' @param start_time; a POSIXct value, time when experiment started. It's usually the minimal time for subject in exp or web data. 
 #' @return dataframe
 #' @export

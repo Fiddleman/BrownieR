@@ -43,45 +43,47 @@ generateTimestampOffsetInput <- function(rawData, subject, destdir, sourcedir = 
 
 
         if(file.exists(file.path(destfolder, "timestamp_offset_input.csv"))){
-                stop(cat(subject, " already processed (Timestampoffset generated)\n"))
+                message(cat(subject, " already processed (Timestampoffset generated)\n"))
+        } else {
+          counter_second <- 0
+          timestamp_receive_diff <- 0
+          timestamp_receive_diff_acc <- 0
+          timestamp_receive_diff_total <- 0
+          last_timestamp_receive <- 0
+          counter_secondVector <- c()
+          timestamp_receive_diffVector <- c()
+          timestamp_receive_diff_accVector <- c()
+          timestamp_receive_diff_totalVector <- c()
+          
+          
+          
+          # find 1, 1001, ...., row
+          n <- floor(nrow(rawData)/1000)
+          if(nrow(rawData) %% 1000 == 0){n <- n-1}
+          start <- 1
+          for(i in 0:n){
+            rowindex <- start + 1000 * i
+            line <- rawData[rowindex, ]
+            timestamp_receive <- as.numeric(line["ReceiveTime"])
+            timestamp_sampling <- as.numeric(line["SampleTime"])
+            #timestamp_receive_diff <- 0
+            timestamp_receive_diff <- ifelse(rowindex == 1, 0, timestamp_receive - last_timestamp_receive - 1000)
+            timestamp_receive_diff_acc <- as.numeric(timestamp_receive_diff_acc) + as.numeric(timestamp_receive_diff)
+            timestamp_receive_diff_total <- as.numeric(timestamp_receive) - as.numeric(timestamp_sampling)-1000
+            
+            counter_second <- as.integer(rowindex/1000)
+            counter_secondVector <- c(counter_secondVector, counter_second)
+            timestamp_receive_diffVector <- c(timestamp_receive_diffVector, timestamp_receive_diff)
+            timestamp_receive_diff_accVector <- c(timestamp_receive_diff_accVector, timestamp_receive_diff_acc)
+            timestamp_receive_diff_totalVector <- c(timestamp_receive_diff_totalVector, timestamp_receive_diff_total)
+            
+            last_timestamp_receive <- timestamp_receive
+          }
+          
+          timestamp_offset_input <- data.frame(counter_secondVector, timestamp_receive_diffVector, timestamp_receive_diff_accVector, timestamp_receive_diff_totalVector)
+          writeToCSV(destfolder,"timestamp_offset_input.csv", timestamp_offset_input, col.names = FALSE)
+          
         }
 
-        counter_second <- 0
-        timestamp_receive_diff <- 0
-        timestamp_receive_diff_acc <- 0
-        timestamp_receive_diff_total <- 0
-        last_timestamp_receive <- 0
-        counter_secondVector <- c()
-        timestamp_receive_diffVector <- c()
-        timestamp_receive_diff_accVector <- c()
-        timestamp_receive_diff_totalVector <- c()
-
-
-
-        # find 1, 1001, ...., row
-        n <- floor(nrow(rawData)/1000)
-        if(nrow(rawData) %% 1000 == 0){n <- n-1}
-        start <- 1
-        for(i in 0:n){
-                rowindex <- start + 1000 * i
-                line <- rawData[rowindex, ]
-                timestamp_receive <- as.numeric(line["ReceiveTime"])
-                timestamp_sampling <- as.numeric(line["SampleTime"])
-                #timestamp_receive_diff <- 0
-                timestamp_receive_diff <- ifelse(rowindex == 1, 0, timestamp_receive - last_timestamp_receive - 1000)
-                timestamp_receive_diff_acc <- as.numeric(timestamp_receive_diff_acc) + as.numeric(timestamp_receive_diff)
-                timestamp_receive_diff_total <- as.numeric(timestamp_receive) - as.numeric(timestamp_sampling)-1000
-
-                counter_second <- as.integer(rowindex/1000)
-                counter_secondVector <- c(counter_secondVector, counter_second)
-                timestamp_receive_diffVector <- c(timestamp_receive_diffVector, timestamp_receive_diff)
-                timestamp_receive_diff_accVector <- c(timestamp_receive_diff_accVector, timestamp_receive_diff_acc)
-                timestamp_receive_diff_totalVector <- c(timestamp_receive_diff_totalVector, timestamp_receive_diff_total)
-
-                last_timestamp_receive <- timestamp_receive
-        }
-
-        timestamp_offset_input <- data.frame(counter_secondVector, timestamp_receive_diffVector, timestamp_receive_diff_accVector, timestamp_receive_diff_totalVector)
-        writeToCSV(destfolder,"timestamp_offset_input.csv", timestamp_offset_input, col.names = FALSE)
 
 }

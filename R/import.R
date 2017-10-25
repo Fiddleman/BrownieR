@@ -34,7 +34,6 @@ import <- function(path, prefix, physio_mv_dir = T, create_physio_object = F){
       data_object <- structure(data, class = dtype, files = files)
       assign(paste0(prefix, "_", dtype), data_object, envir = .GlobalEnv)
       if (physio_mv_dir){
-        #move all physio files to folder ./physio/data
         topath <- paste0(path, file.path("/physio/"))
         files <- file_index[file_index[,2] == dtype, 1]
         if (!dir.exists(topath)) dir.create(topath, recursive=TRUE)
@@ -75,9 +74,8 @@ indexFiles <- function(path){
   for (file in files){
     types <- append(types, detectDataType(file))
   }
-  files_types <- append(files, types)
-  a_files_types <- array(files_types, dim = c(length(files),2))
-  file_index <- a_files_types[a_files_types[,2] != "unkown",] #remove unknown file types from index
+  files_types <- data.frame(files, types)
+  file_index <- files_types[files_types[,2] != "unkown",] #remove unknown file types from index
   return(file_index)
 }
 
@@ -146,7 +144,3 @@ rm_empty_col <- function(data) {
   if (!is.null(del_col)) data <- data[,-del_col]
   return(data)
 }
-
-
-
-

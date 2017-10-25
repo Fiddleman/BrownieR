@@ -16,13 +16,17 @@ createUnisensData <- function(data = physio174,
                               nameUnisensDataFolder = "01_unisens_data",
                               nameTrimmedUnisensDataFolder = "02_unisens_trimmed",
                               pathMarkerFile = "tests/testthat/datafortestingphysio/marker174.csv"){
+  #transform physio data, transform time colums to original format
+  data[t_cols_physio] <- lapply(data[t_cols_physio], function(x){as.integer(x)*1000})
+  data[,c(7:11)] <- 0
+  
   #path configurations
   unisense_folder <- file.path(destinationDirectory, nameUnisensDataFolder)
   trimmed_unisens_folder <- file.path(destinationDirectory, nameTrimmedUnisensDataFolder)
   cut_folder <- file.path(destinationDirectory, "00_raw_data_cut")
   
   # load unisens java library
-  initalizeUnisens()
+  initalize_unisens()
   # function calls
   cutData(data, subjectname, destinationDirectory)
   generateTimestampOffsetInput(data, subjectname, destinationDirectory)
