@@ -4,19 +4,21 @@
 \alias{import}
 \title{import(path, prefix)}
 \usage{
-import(path, prefix)
+import(path, prefix, physio_mv_dir = T, create_physio_object = F)
 }
 \arguments{
 \item{path;}{a character}
 
 \item{prefix;}{a character, nameing of lists}
+
+\item{physio_mv_dir;}{a logical, indicates if physio data should be moved in subfolder "physio", necessary for create unisense data objects}
+
+\item{create_physio_object;}{a logical, indicates if physio data should be added to enviornment, necessary for do eda summary and eda plot}
 }
 \value{
 none (adds list directly to global environment)
 }
 \description{
 Imports brownie data (of heterogenous types) from folder and adds list containing dataframes and type to global environment (nameing by prefix).
-It only imports data of class web and exp directly in R, due to the fact, that pyhsio-data is too big, it moves it in 
-a subdirectory, in *path*/physio/
 }
 

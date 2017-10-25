@@ -2,7 +2,7 @@
 % Please edit documentation in R/web-plot.R
 \name{plot.web}
 \alias{plot.web}
-\title{Heatmap plotting on website screenshot}
+\title{plot.web() Heatmap plotting on website screenshot}
 \usage{
 \method{plot}{web}(data, url, type = "motion", subject = c(1, 2),
   alpha = 0.1, size = 0.5, color = "purple", ...)
