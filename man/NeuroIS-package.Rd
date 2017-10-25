@@ -3,17 +3,12 @@
 \docType{package}
 \name{NeuroIS-package}
 \alias{NeuroIS-package}
-\title{Analyzes Brownie Logfiles and Plot Heatmaps of User Behaviour}
+\title{NeuroIS: The R-Package for Neuro Information Systems Research in R}
 \description{
-With this package it's possible to analyse logfiles which are recorded
-during an experiment session using theframework "Brownie"[1] by the
-Karlsruher Institute of Technology (KIT). After your csv files are read in
-with read_brownie_data() several options are available to analyse the
-data: To get an overview which pages are clicked during an experiment and how
-long propants last at each one, the function "summary" can be used. Mouse
-moving or clicking data can be plot on a screenshot of a webpage as heatmap.
-To visualize the behaviour of propants the function "as_clickstream" transform
-brownie data in an appropriate format suiting for the clickstream package.
+NeuroIS has become an established method in IS research for investigating user behavior, perception, 
+and even neurophysiology. This same named package NeuroIS is a freely-available open source R-package 
+for analyzing NeuroIS data, enabling scholars to investigate the bio-physiological fundations of 
+human-computer interaction in individual as well as in group settings.
 }
 \details{
 [1] http://im.iism.kit.edu/1093_1100.php
@@ -23,26 +18,42 @@ brownie data in an appropriate format suiting for the clickstream package.
 R (>= 3.0) \cr }
 }
 \examples{
-# Read in your logfiles
-data <- read_brownie_data("data", removeQuery = T, removeFragment = T)
+### 0. Preparations & Import
+library(NeuroIS)
 
-# To get an overview of your data with summary_brownie()
-summary <- summary_brownie(data = data, objectives = F)
+import(path = "data/jump_and_rest", prefix = "jump_and_rest", 
+       create_physio_object = T, physio_mv_dir = T)
 
-# Once you see the complete list of visited pages, select objectives to create a report showing conversion rates
-objectives  <- c(Fonds = "https://www.visualvest.de/fonds/",
-                Depot = "https://anlegen.visualvest.de/app/depot/")
-summary_brownie(data = data, objectives = objectives)
+### 1. Do central pages exist in terms of duration or click frequency?
+summary(data = jump_and_rest_web, objectives = F)
 
-# Take Screenshots of your pages
-# It's cruical that the right width is taken. The width must be the width of the browser viewport during the experiment!
-take_screenshot(urls = summary$URL, width = 1200)
+### 2. At which pages did the proband jump?
+marker <- marker(data = jump_and_rest_web, subject = 1, path_marker = "data/jump_and_rest/physio" )
 
-# Plot data
-heatmap_for_homepage <- plot_brownie(data,  url="https://www.visualvest.de/", type = "motion", session = "all")
+start_time <- min(jump_and_rest_web[jump_and_rest_web$SUBJECT_ID_SUBJECT == 1]$Time, na.rm = T)
 
-# Convert to clickstream
-as_clickstream(data, objectives, "last")
+summary(jump_and_rest_physio, type = "eda", subject = 1, marker = marker, start_time = start_time) 
+
+plot(jump_and_rest_physio, type = "eda", subject = 1, marker = marker, start_time)
+
+plot(jump_and_rest_physio, type = "ecg", subject = 1, marker = "data/jump_and_rest/physio/marker1.csv",
+     start_time, physio_unisens_dir = "data/jump_and_rest/physio/")
+
+### 3. Which elements on a central page did the mouse last on?
+web_summary <- summary(data = jump_and_rest_web, objectives = F)
+urls <- web_summary$URL
+take_screenshot(urls = urls)
+plot(jump_and_rest_web, url = urls[4], type = "motion", subject = 1,
+     alpha = 0.1, size = 3, color = "purple")
+
+### 4. What’s the probability to go from one page to another, based on the subject?
+library(clickstream)
+
+cls <- as_clickstream(data = jump_and_rest_web, objectives = F, attribution ="last")
+summary(cls)
+mc <- fitMarkovChain(clickstreamList = cls, order = 1, control = list(optimizer = "quadratic"))
+summary(mc)
+plot(mc, order = 1)
 
 }
 \author{
